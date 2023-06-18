@@ -15,6 +15,7 @@ ABBREV = {
     AtomicDataDict.PER_ATOM_ENERGY_KEY: "Ei",
     AtomicDataDict.FORCE_KEY: "f",
     AtomicDataDict.NODE_FEATURES_KEY: "h",
+    AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY: "f_w_e"
     LOSS_KEY: "loss",
     VALIDATION: "val",
     TRAIN: "train",
