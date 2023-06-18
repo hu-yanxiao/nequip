@@ -41,6 +41,7 @@ _DEFAULT_NODE_FIELDS: Set[str] = {
     AtomicDataDict.FORCE_KEY,
     AtomicDataDict.PER_ATOM_ENERGY_KEY,
     AtomicDataDict.BATCH_KEY,
+    AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY,
 }
 _DEFAULT_EDGE_FIELDS: Set[str] = {
     AtomicDataDict.EDGE_CELL_SHIFT_KEY,
@@ -393,7 +394,8 @@ class AtomicData(Data):
             for k, v in atoms.arrays.items()
             if k in include_keys
         }
-
+        add_fields.update({AtomicDataDict.PER_ATOM_ENERGY_KEY:atoms.info["energy"]*np.ones_like(atoms.arrays["numbers"])/len(atoms.arrays["numbers"])})
+        add_fields.update({AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY: add_fields[AtomicDataDict.FORCE_KEY]*add_fields[AtomicDataDict.PER_ATOM_ENERGY_KEY][:,np.newaxis] })
         # Get info from atoms.info; second lowest priority.
         add_fields.update(
             {
