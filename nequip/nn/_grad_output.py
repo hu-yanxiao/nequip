@@ -62,7 +62,11 @@ class GradientOutput(GraphModuleMixin, torch.nn.Module):
             my_irreps_in={of: Irreps("0e")},
             irreps_out=func.irreps_out,
         )
-
+        if self.of == AtomicDataDict.TOTAL_ENERGY_KEY and self.out_field ==AtomicDataDict.FORCE_KEY:
+            self.irreps_out.update(
+            {AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY:self.irreps_in[wrt]}
+        )
+            
         # The gradient of a single scalar w.r.t. something of a given shape and irrep just has that shape and irrep
         # Ex.: gradient of energy (0e) w.r.t. position vector (L=1) is also an L = 1 vector
         self.irreps_out.update(
@@ -103,7 +107,8 @@ class GradientOutput(GraphModuleMixin, torch.nn.Module):
             if self._negate:
                 grad = torch.neg(grad)
             data[out] = grad
-
+        if self.of == AtomicDataDict.TOTAL_ENERGY_KEY and self.out_field ==AtomicDataDict.FORCE_KEY:
+            data[AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY]= torch.einsum("ij,ik->ik",[data[AtomicDataDict.PARTIAL_FORCE_KEY].squeeze(-1)],data[out])
         # unset requires_grad_
         for req_grad, k in zip(old_requires_grad, self.wrt):
             data[k].requires_grad_(req_grad)
