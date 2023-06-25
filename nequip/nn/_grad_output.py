@@ -107,7 +107,7 @@ class GradientOutput(GraphModuleMixin, torch.nn.Module):
             data[out] = grad
         temp_force=torch.linalg.norm(data[out],axis=1)
         reci_force=1/temp_force
-        reci_force[reci_force>10]=10
+        reci_force[reci_force>5]=5
         reci_force=reci_force.unsqueeze(-1)
         data[AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY]= torch.einsum("ij,ik->ik",[data["atomic_energy"],reci_force])
         #data[AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY]= torch.einsum("ij,ik->ik",[data["atomic_energy"],data[out]])
