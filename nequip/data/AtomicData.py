@@ -397,8 +397,7 @@ class AtomicData(Data):
         add_fields.update({AtomicDataDict.PER_ATOM_ENERGY_KEY:atoms.info["energy"]*np.ones_like(atoms.arrays["numbers"])/len(atoms.arrays["numbers"])})
         temp_force=add_fields[AtomicDataDict.FORCE_KEY]
         temp_force=np.linalg.norm(temp_force,axis=1)
-        reci_force=1/temp_force
-        reci_force[reci_force>5]=5
+        reci_force=1/(temp_force+0.2)
         add_fields.update({AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY: reci_force*add_fields[AtomicDataDict.PER_ATOM_ENERGY_KEY] })
         #add_fields.update({AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY: add_fields[AtomicDataDict.FORCE_KEY]*add_fields[AtomicDataDict.PER_ATOM_ENERGY_KEY][:,np.newaxis] })
         # Get info from atoms.info; second lowest priority.
