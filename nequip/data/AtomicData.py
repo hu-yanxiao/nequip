@@ -401,6 +401,12 @@ class AtomicData(Data):
         #reci_force=1/temp_force
         #reci_force[reci_force>5]=5
         add_fields.update({AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY: np.zeros_like(add_fields[AtomicDataDict.PER_ATOM_ENERGY_KEY]) })
+        _atom_type=atoms.get_chemical_symbols()
+        _order_atom=[]
+        for a in _atom_type:
+            if a not in _order_atom:
+                _order_atom.append(a)
+        add_fields.update({AtomicDataDict.ORDERED_TYPE_KEY: np.array(_order_atom)})
         #add_fields.update({AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY: add_fields[AtomicDataDict.FORCE_KEY]*add_fields[AtomicDataDict.PER_ATOM_ENERGY_KEY][:,np.newaxis] })
         # Get info from atoms.info; second lowest priority.
         add_fields.update(
