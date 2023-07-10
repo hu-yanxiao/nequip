@@ -23,6 +23,7 @@ CELL_KEY: Final[str] = "cell"
 PBC_KEY: Final[str] = "pbc"
 # [n_atom, 1] long tensor
 ATOMIC_NUMBERS_KEY: Final[str] = "atomic_numbers"
+ORDERED_NUMBERS_KEY: Final[str]= "ordered_numbers"
 # [n_atom, 1] long tensor
 ATOM_TYPE_KEY: Final[str] = "atom_types"
 ORDERED_TYPE_KEY : Final[str] = "ordered_types"
@@ -35,6 +36,7 @@ BASIC_STRUCTURE_KEYS: Final[List[str]] = [
     ATOM_TYPE_KEY,
     ATOMIC_NUMBERS_KEY,
     ORDERED_TYPE_KEY,
+    ORDERED_NUMBERS_KEY,
 ]
 
 # A [n_edge, 3] tensor of displacement vectors associated to edges
