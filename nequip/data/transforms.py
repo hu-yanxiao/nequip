@@ -102,9 +102,13 @@ class TypeMapper:
                 self.chemical_symbol_to_type is not None
             ), "Atomic numbers provided but there is no chemical_symbols/chemical_symbol_to_type mapping!"
             atomic_numbers = data[AtomicDataDict.ATOMIC_NUMBERS_KEY]
+            ordered_numbers =data[AtomicDataDict.ORDERED_NUMBERS_KEY]
             del data[AtomicDataDict.ATOMIC_NUMBERS_KEY]
 
             data[AtomicDataDict.ATOM_TYPE_KEY] = self.transform(atomic_numbers)
+            
+            
+            data[AtomicDataDict.ORDERED_TYPE_KEY]=self.transform(ordered_numbers)
         else:
             if types_required:
                 raise KeyError(
