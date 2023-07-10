@@ -84,8 +84,8 @@ class GradientOutput(GraphModuleMixin, torch.nn.Module):
             data[k].requires_grad_(True)
             wrt_tensors.append(data[k])
             
-        atom_num=data[AtomicDataDict.ATOM_TYPE_KEY].squeeze(-1)
-        
+        #atom_num=data[AtomicDataDict.ATOM_TYPE_KEY].squeeze(-1)
+        _order_atom=data[AtomicDataDict.ORDERED_TYPE_KEY].squeeze(-1)
         
         # run func
         data = self.func(data)
@@ -115,10 +115,10 @@ class GradientOutput(GraphModuleMixin, torch.nn.Module):
         reci_force=reci_force.unsqueeze(-1)
         
         local_energy=data["atomic_energy"].squeeze(-1)
-        _order_atom=[]
-        for a in atom_num:
-            if a not in _order_atom:
-                _order_atom.append(a)
+        
+        #for a in atom_num:
+        #    if a not in _order_atom:
+        #        _order_atom.append(a)
                 
         local_mean=torch.tensor([[local_energy[atom_num==j].mean(),len(local_energy[atom_num==j])] for j in _order_atom],device=local_energy.device)
         _mean=torch.repeat_interleave(local_mean[:,0], local_mean[:,1].long())
