@@ -29,6 +29,7 @@ PBC = Union[bool, Tuple[bool, bool, bool]]
 _DEFAULT_LONG_FIELDS: Set[str] = {
     AtomicDataDict.EDGE_INDEX_KEY,
     AtomicDataDict.ATOMIC_NUMBERS_KEY,
+    AtomicDataDict.ORDERED_NUMBERS_KEY,
     AtomicDataDict.ATOM_TYPE_KEY,
     AtomicDataDict.ORDERED_TYPE_KEY,
     AtomicDataDict.BATCH_KEY,
@@ -39,6 +40,7 @@ _DEFAULT_NODE_FIELDS: Set[str] = {
     AtomicDataDict.NODE_ATTRS_KEY,
     AtomicDataDict.ATOMIC_NUMBERS_KEY,
     AtomicDataDict.ATOM_TYPE_KEY,
+    AtomicDataDict.ORDERED_NUMBERS_KEY,
     AtomicDataDict.ORDERED_TYPE_KEY,
     AtomicDataDict.FORCE_KEY,
     AtomicDataDict.PER_ATOM_ENERGY_KEY,
@@ -402,12 +404,7 @@ class AtomicData(Data):
         #reci_force=1/temp_force
         #reci_force[reci_force>5]=5
         add_fields.update({AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY: np.zeros_like(add_fields[AtomicDataDict.PER_ATOM_ENERGY_KEY]) })
-        _atom_type=atoms.get_chemical_symbols()
-        _order_atom=[]
-        for a in _atom_type:
-            if a not in _order_atom:
-                _order_atom.append(a)
-        add_fields.update({AtomicDataDict.ORDERED_TYPE_KEY: np.array(_order_atom)})
+    
         #add_fields.update({AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY: add_fields[AtomicDataDict.FORCE_KEY]*add_fields[AtomicDataDict.PER_ATOM_ENERGY_KEY][:,np.newaxis] })
         # Get info from atoms.info; second lowest priority.
         add_fields.update(
@@ -438,6 +435,12 @@ class AtomicData(Data):
                 )
 
         add_fields[AtomicDataDict.ATOMIC_NUMBERS_KEY] = atoms.get_atomic_numbers()
+        
+        _order_atom=[]
+        for a in add_fields[AtomicDataDict.ATOMIC_NUMBERS_KEY]:
+            if a not in _order_atom:
+                _order_atom.append(a)
+        add_fields[AtomicDataDict.ORDERED_NUMBERS_KEY]= np.array(_order_atom)
 
         # cell and pbc in kwargs can override the ones stored in atoms
         cell = kwargs.pop("cell", atoms.get_cell())
