@@ -85,9 +85,7 @@ class GradientOutput(GraphModuleMixin, torch.nn.Module):
             wrt_tensors.append(data[k])
             
         atom_num=data[AtomicDataDict.ATOM_TYPE_KEY].squeeze(-1)
-        temp_force=torch.linalg.norm(data[AtomicDataDict.FORCE_KEY],axis=1)
-        reci_force=1/(temp_force+0.2)
-        reci_force=reci_force.unsqueeze(-1)
+        
         
         # run func
         data = self.func(data)
@@ -112,10 +110,21 @@ class GradientOutput(GraphModuleMixin, torch.nn.Module):
                 grad = torch.neg(grad)
             data[out] = grad
         
+        temp_force=torch.linalg.norm(data[out],axis=1)
+        reci_force=1/(temp_force+0.2)
+        reci_force=reci_force.unsqueeze(-1)
         
         local_energy=data["atomic_energy"].squeeze(-1)
-        local_mean={int(j):local_energy[atom_num==j].mean() for j in list(set(atom_num))}
-        _shift=torch.tensor([i-local_mean[int(j)] for i,j in zip(local_energy,atom_num)],device=local_energy.device)
+        _order_atom=[]
+        for a in atom_num:
+            if a not in _order_atom:
+                _order_atom.append(a)
+                
+        local_mean=torch.tensor([local_energy[atom_num==j].mean() for j in _order_atom)],device=local_energy.device)
+        local_num=torch.tensor([atom_num.count(j) for j in _order_atom],device=local_energy.device)
+        _mean=torch.repeat_interleave(local_mean, local_num)
+        _shift=local_energy-_mean
+        #_shift=torch.tensor([i-local_mean[int(j)] for i,j in zip(local_energy,atom_num)],device=local_energy.device)
         _shift=_shift.unsqueeze(-1)
         
         data[AtomicDataDict.FORCE_WEIGHTED_ENERGY_KEY]= torch.einsum("ij,ik->ik",[_shift,reci_force.sqrt()])
