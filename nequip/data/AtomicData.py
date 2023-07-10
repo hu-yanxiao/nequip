@@ -30,6 +30,7 @@ _DEFAULT_LONG_FIELDS: Set[str] = {
     AtomicDataDict.EDGE_INDEX_KEY,
     AtomicDataDict.ATOMIC_NUMBERS_KEY,
     AtomicDataDict.ATOM_TYPE_KEY,
+    AtomicDataDict.ORDERED_TYPE_KEY,
     AtomicDataDict.BATCH_KEY,
 }
 _DEFAULT_NODE_FIELDS: Set[str] = {
