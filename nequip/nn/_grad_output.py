@@ -120,7 +120,7 @@ class GradientOutput(GraphModuleMixin, torch.nn.Module):
             if a not in _order_atom:
                 _order_atom.append(a)
                 
-        local_mean=torch.tensor([local_energy[atom_num==j].mean() for j in _order_atom)],device=local_energy.device)
+        local_mean=torch.tensor([local_energy[atom_num==j].mean() for j in _order_atom],device=local_energy.device)
         local_num=torch.tensor([atom_num.count(j) for j in _order_atom],device=local_energy.device)
         _mean=torch.repeat_interleave(local_mean, local_num)
         _shift=local_energy-_mean
