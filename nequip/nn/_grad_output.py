@@ -85,7 +85,7 @@ class GradientOutput(GraphModuleMixin, torch.nn.Module):
             wrt_tensors.append(data[k])
             
         atom_num=data[AtomicDataDict.ATOM_TYPE_KEY].squeeze(-1)
-        temp_force=torch.linalg.norm(data[[AtomicDataDict.FORCE_KEY],axis=1)
+        temp_force=torch.linalg.norm(data[AtomicDataDict.FORCE_KEY],axis=1)
         reci_force=1/(temp_force+0.2)
         reci_force=reci_force.unsqueeze(-1)
         
