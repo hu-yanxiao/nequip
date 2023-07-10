@@ -84,7 +84,7 @@ class GradientOutput(GraphModuleMixin, torch.nn.Module):
             data[k].requires_grad_(True)
             wrt_tensors.append(data[k])
             
-        #atom_num=data[AtomicDataDict.ATOM_TYPE_KEY].squeeze(-1)
+        atom_num=data[AtomicDataDict.ATOM_TYPE_KEY].squeeze(-1)
         _order_atom=data[AtomicDataDict.ORDERED_TYPE_KEY].squeeze(-1)
         
         # run func
