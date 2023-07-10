@@ -34,7 +34,7 @@ BASIC_STRUCTURE_KEYS: Final[List[str]] = [
     PBC_KEY,
     ATOM_TYPE_KEY,
     ATOMIC_NUMBERS_KEY,
-    BASIC_STRUCTURE_KEYS,
+    ORDERED_TYPE_KEY,
 ]
 
 # A [n_edge, 3] tensor of displacement vectors associated to edges
