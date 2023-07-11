@@ -120,7 +120,7 @@ class GradientOutput(GraphModuleMixin, torch.nn.Module):
         #    if a not in _order_atom:
         #        _order_atom.append(a)
                 
-        _weighted_shift=torch.tensor([torch.einsum("i,i->i",[reci_force[atom_num==j].sqrt(),local_energy[atom_num==j]-local_energy[atom_num==j].mean()]).square().mean() for j in list(set(_order_atom))],device=local_energy.device).sqrt().sum()
+        _weighted_shift=torch.tensor([(torch.einsum("i,i->i",[reci_force[atom_num==j].sqrt(),local_energy[atom_num==j]-local_energy[atom_num==j].mean()])*(local_energy[atom_num==j].size()[0]/local_energy.size()[0])).square().mean() for j in list(set(_order_atom))],device=local_energy.device).sqrt().sum()
         _v_w_s=torch.ones_like(local_energy)*_weighted_shift/local_energy.size()[0]
         #_mean=torch.repeat_interleave(local_mean[:,0], local_mean[:,1].long())
         #_shift=local_energy-_mean
